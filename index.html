@@ -7,10 +7,10 @@
     <style>
         .slide_container_parent{
             position: absolute;
-            left: 50px;
-            top: 50px;
-            width: 500px;
-            height: 313px;
+            left: 2.0vmin;
+            top: 2.0vmin;
+            width: 90.0vmin;
+            height: 52vmin;
             overflow: scroll;
             overflow-y:hidden;
             scroll-behavior: smooth;
@@ -24,7 +24,6 @@
             height: inherit;
         }
         .slides{
-            width: 500px;
             height: inherit;
             float: left;
         }
@@ -34,6 +33,9 @@
         var slide_count = 0;
         function slide_initialise(){
             document.getElementsByClassName("slide_container")[0].style.width = document.getElementsByClassName("slide_container_parent")[0].clientWidth * slides.length + "px";
+            for(i=0;i<slides.length;i++){
+                slides[i].style.width =  document.getElementsByClassName("slide_container_parent")[0].clientWidth + "px";
+            }
             for(i=0;i<slides.length;i++){
                 slides[i].id = "slide_"+i;
             }
