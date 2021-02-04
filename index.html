@@ -10,7 +10,7 @@
             left: 50px;
             top: 50px;
             width: 500px;
-            height: 312.5px;
+            height: 313px;
             overflow: scroll;
             overflow-y:hidden;
             scroll-behavior: smooth;
@@ -21,19 +21,19 @@
             display: none;
         }
         .slide_container{
-            width: 2500px;
-            height: 312.5px;
+            height: inherit;
         }
         .slides{
             width: 500px;
-            height: auto;
+            height: inherit;
             float: left;
         }
     </style>
     <script>
         var slides = document.getElementsByClassName("slides");
         var slide_count = 0;
-        function scroll_initialise(){
+        function slide_initialise(){
+            document.getElementsByClassName("slide_container")[0].style.width = document.getElementsByClassName("slide_container_parent")[0].clientWidth * slides.length + "px";
             for(i=0;i<slides.length;i++){
                 slides[i].id = "slide_"+i;
             }
@@ -50,7 +50,7 @@
         
     </script>
 </head>
-<body onload="scroll_initialise();">
+<body onload="slide_initialise();">
     <div class="slide_container_parent">
         <div class="slide_container">
             <img class="slides" src="images/slide(1).jpg">
