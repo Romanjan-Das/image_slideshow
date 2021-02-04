@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slideshow</title>
+    <style>
+        .slide_container_parent{
+            position: absolute;
+            left: 50px;
+            top: 50px;
+            width: 500px;
+            height: 312.5px;
+            overflow: scroll;
+            overflow-y:hidden;
+            scroll-behavior: smooth;
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .slide_container_parent::-webkit-scrollbar{
+            display: none;
+        }
+        .slide_container{
+            width: 2500px;
+            height: 312.5px;
+        }
+        .slides{
+            width: 500px;
+            height: auto;
+            float: left;
+        }
+    </style>
+    <script>
+        var slides = document.getElementsByClassName("slides");
+        var slide_count = 0;
+        function scroll_initialise(){
+            for(i=0;i<slides.length;i++){
+                slides[i].id = "slide_"+i;
+            }
+
+            var slide_timer = setInterval(() => {
+            var x = document.getElementById("slide_"+slide_count);
+            x.scrollIntoView();
+            slide_count++;
+            if(slide_count>slides.length-1){
+                slide_count = 0;
+            }
+        }, 1000);
+        }
+        
+    </script>
+</head>
+<body onload="scroll_initialise();">
+    <div class="slide_container_parent">
+        <div class="slide_container">
+            <img class="slides" src="images/slide(1).jpg">
+            <img class="slides" src="images/slide(2).jpg">
+            <img class="slides" src="images/slide(3).jpg">
+            <img class="slides" src="images/slide(4).jpg">
+            <img class="slides" src="images/slide(5).jpg">
+        </div>
+    </div>
+    
+</body>
+</html>
