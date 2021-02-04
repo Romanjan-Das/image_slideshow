@@ -8,7 +8,7 @@
     <style>
         .slide_controls {
             /* background-color: rgb(20, 199, 44); */
-            opacity: 0.2;
+            opacity: 0.3;
             border: 1px solid darkgrey;
             padding: 5px;
             padding-left: 10px;
@@ -16,27 +16,29 @@
             box-sizing: border-box;
         }
 
-        .slide_icon{
+        .slide_icon {
             height: 40px;
             width: 40px;
             border: 1px solid darkgrey;
             border-radius: 50%;
             float: left;
         }
-        .slide_icon:hover{
+
+        .slide_icon:hover {
             box-shadow: 0px 0px 10px 1px darkgrey;
         }
-        .slide_left{
-            position: absolute; 
+
+        .slide_left {
+            position: absolute;
             left: 10px;
         }
 
-        .slide_pause{
+        .slide_pause {
             position: absolute;
             left: 60px;
         }
 
-        .slide_status{
+        .slide_status {
             position: absolute;
             left: 110px;
             width: 260px;
@@ -44,13 +46,13 @@
             box-sizing: border-box;
         }
 
-        .slide_status_container{
+        .slide_status_container {
             margin: auto;
             margin-top: 11px;
             width: 100px;
         }
 
-        .slide_status_pointers{
+        .slide_status_pointers {
             display: inline-block;
             margin-left: 8px;
             height: 10px;
@@ -58,19 +60,20 @@
             border: 1px solid black;
             border-radius: 50%;
             float: none;
-            
+
         }
 
-        .slide_blank{
+        .slide_blank {
             position: absolute;
             right: 60px;
         }
-        .slide_right{
+
+        .slide_right {
             position: absolute;
             right: 10px;
         }
 
-        .slide_container_parent_super{
+        .slide_container_parent_super {
             position: absolute;
             top: 10px;
             left: 10px;
@@ -78,6 +81,7 @@
             height: 300px;
             padding: 0px;
         }
+
         .slide_container_parent {
             width: 480px;
             height: 300px;
@@ -109,31 +113,44 @@
         var slides = document.getElementsByClassName("slides");
         var slide_count = 1;
         var slide_pointer = [];
+        var slide_timer;
         function slide_initialise() {
             document.getElementsByClassName("slide_container")[0].style.width = (document.getElementsByClassName("slide_container_parent")[0].clientWidth * slides.length + 10) + "px";
             //document.getElementsByClassName("slide_controls")[0].style.height = document.getElementsByClassName("slide_container_parent")[0].clientHeight * 0.15 + "px";
             document.getElementsByClassName("slide_controls")[0].style.width = document.getElementsByClassName("slide_container_parent")[0].clientWidth + "px";
-            document.getElementsByClassName("slide_status_container")[0].style.width = (18 * (slides.length+1)) + "px";
+            document.getElementsByClassName("slide_status_container")[0].style.width = (18 * (slides.length + 1)) + "px";
             for (i = 0; i < slides.length; i++) {
                 slides[i].id = "slide_" + i;
                 slide_pointer[i] = document.createElement("div");
-                slide_pointer[i].className="slide_status_pointers";
-                slide_pointer[i].id="slide_pointer_"+i;
+                slide_pointer[i].className = "slide_status_pointers";
+                slide_pointer[i].id = "slide_pointer_" + i;
+                slide_pointer[i].setAttribute("onclick", "goto_slide_image(this);");
                 document.getElementsByClassName("slide_status_container")[0].appendChild(slide_pointer[i]);
             }
 
-            var slide_timer = setInterval(() => {
+            slide_timer = setInterval(() => {
                 var x = document.getElementById("slide_" + slide_count);
                 x.scrollIntoView();
-                for(i=0;i<slides.length;i++){
-                document.getElementById("slide_pointer_"+i).style.backgroundColor = "white";
+                for (i = 0; i < slides.length; i++) {
+                    document.getElementById("slide_pointer_" + i).style.backgroundColor = "white";
                 }
-                document.getElementById("slide_pointer_"+slide_count).style.backgroundColor = "darkgrey";
+                document.getElementById("slide_pointer_" + slide_count).style.backgroundColor = "black";
                 slide_count++;
                 if (slide_count > slides.length - 1) {
                     slide_count = 0;
                 }
             }, 3000);
+        }
+        function goto_slide_image(x) {
+            for (i = 0; i < slides.length; i++) {
+                document.getElementById("slide_pointer_" + i).style.backgroundColor = "white";
+            }
+            x.style.backgroundColor = "black";
+            var str = x.id;
+            str = str.slice(14, str.length);
+            var y = document.getElementById("slide_" + str);
+            clearInterval(slide_timer);
+            y.scrollIntoView();
         }
 
     </script>
@@ -156,7 +173,7 @@
             <div class="slide_status">
                 <div class="slide_status_container">
                 </div>
-                
+
             </div>
             <div class="slide_icon slide_blank"></div>
             <div class="slide_icon slide_right"></div>
