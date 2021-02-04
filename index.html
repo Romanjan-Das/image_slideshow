@@ -1,70 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slideshow</title>
     <style>
-        .slide_container_parent{
-            position: inherit;
-            width: 90.0vmin;
-            height: 52vmin;
-            overflow: scroll;
-            overflow-y:hidden;
-            scroll-behavior: smooth;
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+        .slide_controls {
+            /* background-color: rgb(20, 199, 44); */
+            opacity: 0.2;
+            border: 1px solid darkgrey;
+            padding: 5px;
+            padding-left: 10px;
+            height: 55px;
+            box-sizing: border-box;
         }
-        .slide_container_parent::-webkit-scrollbar{
+
+        .slide_icon{
+            height: 40px;
+            width: 40px;
+            border: 1px solid darkgrey;
+            border-radius: 50%;
+            float: left;
+        }
+        .slide_icon:hover{
+            box-shadow: 0px 0px 10px 1px darkgrey;
+        }
+        .slide_left{
+            position: absolute; 
+            left: 10px;
+        }
+
+        .slide_pause{
+            position: absolute;
+            left: 60px;
+        }
+
+        .slide_status{
+            position: absolute;
+            left: 110px;
+            width: 260px;
+            height: 40px;
+            box-sizing: border-box;
+        }
+
+        .slide_status_container{
+            margin: auto;
+            margin-top: 11px;
+            width: 100px;
+        }
+
+        .slide_status_pointers{
+            display: inline-block;
+            margin-left: 8px;
+            height: 10px;
+            width: 10px;
+            border: 1px solid black;
+            border-radius: 50%;
+            float: none;
+            
+        }
+
+        .slide_blank{
+            position: absolute;
+            right: 60px;
+        }
+        .slide_right{
+            position: absolute;
+            right: 10px;
+        }
+
+        .slide_container_parent_super{
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 480px;
+            height: 300px;
+            padding: 0px;
+        }
+        .slide_container_parent {
+            width: 480px;
+            height: 300px;
+            padding: 0px;
+            margin: 0px;
+            overflow-x: scroll;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        .slide_container_parent::-webkit-scrollbar {
             display: none;
         }
-        .slide_container{
+
+        .slide_container {
             height: inherit;
         }
-        .slides{
+
+        .slides {
             height: inherit;
             float: left;
         }
-        .slide_container_parent_super{
-            position: absolute;
-            left: 2.0vmin;
-            top: 2.0vmin;
-            width: fit-content;
-            height: fit-content;
-        }
-        .slide_controls{
-            position: inherit;
-            background-color: teal;
-        }
-        
     </style>
     <script>
         var slides = document.getElementsByClassName("slides");
         var slide_count = 1;
-        function slide_initialise(){
+        var slide_pointer = [];
+        function slide_initialise() {
+            document.getElementsByClassName("slide_container")[0].style.width = (document.getElementsByClassName("slide_container_parent")[0].clientWidth * slides.length + 10) + "px";
+            //document.getElementsByClassName("slide_controls")[0].style.height = document.getElementsByClassName("slide_container_parent")[0].clientHeight * 0.15 + "px";
             document.getElementsByClassName("slide_controls")[0].style.width = document.getElementsByClassName("slide_container_parent")[0].clientWidth + "px";
-            document.getElementsByClassName("slide_controls")[0].style.top = document.getElementsByClassName("slide_container_parent")[0].clientHeight + "px";
-            document.getElementsByClassName("slide_controls")[0].style.height = document.getElementsByClassName("slide_container_parent")[0].clientHeight * 0.2 + "px";
-            document.getElementsByClassName("slide_container")[0].style.width = document.getElementsByClassName("slide_container_parent")[0].clientWidth * slides.length + "px";
-            for(i=0;i<slides.length;i++){
-                slides[i].style.width =  document.getElementsByClassName("slide_container_parent")[0].clientWidth + "px";
-            }
-            for(i=0;i<slides.length;i++){
-                slides[i].id = "slide_"+i;
+            document.getElementsByClassName("slide_status_container")[0].style.width = (18 * (slides.length+1)) + "px";
+            for (i = 0; i < slides.length; i++) {
+                slides[i].id = "slide_" + i;
+                slide_pointer[i] = document.createElement("div");
+                slide_pointer[i].className="slide_status_pointers";
+                slide_pointer[i].id="slide_pointer_"+i;
+                document.getElementsByClassName("slide_status_container")[0].appendChild(slide_pointer[i]);
             }
 
             var slide_timer = setInterval(() => {
-            var x = document.getElementById("slide_"+slide_count);
-            x.scrollIntoView();
-            slide_count++;
-            if(slide_count>slides.length-1){
-                slide_count = 0;
-            }
-        }, 3000);
+                var x = document.getElementById("slide_" + slide_count);
+                x.scrollIntoView();
+                for(i=0;i<slides.length;i++){
+                document.getElementById("slide_pointer_"+i).style.backgroundColor = "white";
+                }
+                document.getElementById("slide_pointer_"+slide_count).style.backgroundColor = "darkgrey";
+                slide_count++;
+                if (slide_count > slides.length - 1) {
+                    slide_count = 0;
+                }
+            }, 3000);
         }
-        
+
     </script>
 </head>
+
 <body onload="slide_initialise();">
     <div class="slide_container_parent_super">
         <div class="slide_container_parent">
@@ -77,12 +151,17 @@
             </div>
         </div>
         <div class="slide_controls">
-            <div class="slide_back"></div>
-            <div class="slide_pause_resume"></div>
-            <div class="slide_forward"></div>
+            <div class="slide_icon slide_left"></div>
+            <div class="slide_icon slide_pause"></div>
+            <div class="slide_status">
+                <div class="slide_status_container">
+                </div>
+                
+            </div>
+            <div class="slide_icon slide_blank"></div>
+            <div class="slide_icon slide_right"></div>
         </div>
     </div>
-    
-    
 </body>
+
 </html>
