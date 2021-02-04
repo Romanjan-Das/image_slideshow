@@ -6,9 +6,7 @@
     <title>Slideshow</title>
     <style>
         .slide_container_parent{
-            position: absolute;
-            left: 2.0vmin;
-            top: 2.0vmin;
+            position: inherit;
             width: 90.0vmin;
             height: 52vmin;
             overflow: scroll;
@@ -27,11 +25,26 @@
             height: inherit;
             float: left;
         }
+        .slide_container_parent_super{
+            position: absolute;
+            left: 2.0vmin;
+            top: 2.0vmin;
+            width: fit-content;
+            height: fit-content;
+        }
+        .slide_controls{
+            position: inherit;
+            background-color: teal;
+        }
+        
     </style>
     <script>
         var slides = document.getElementsByClassName("slides");
-        var slide_count = 0;
+        var slide_count = 1;
         function slide_initialise(){
+            document.getElementsByClassName("slide_controls")[0].style.width = document.getElementsByClassName("slide_container_parent")[0].clientWidth + "px";
+            document.getElementsByClassName("slide_controls")[0].style.top = document.getElementsByClassName("slide_container_parent")[0].clientHeight + "px";
+            document.getElementsByClassName("slide_controls")[0].style.height = document.getElementsByClassName("slide_container_parent")[0].clientHeight * 0.2 + "px";
             document.getElementsByClassName("slide_container")[0].style.width = document.getElementsByClassName("slide_container_parent")[0].clientWidth * slides.length + "px";
             for(i=0;i<slides.length;i++){
                 slides[i].style.width =  document.getElementsByClassName("slide_container_parent")[0].clientWidth + "px";
@@ -47,21 +60,29 @@
             if(slide_count>slides.length-1){
                 slide_count = 0;
             }
-        }, 1000);
+        }, 3000);
         }
         
     </script>
 </head>
 <body onload="slide_initialise();">
-    <div class="slide_container_parent">
-        <div class="slide_container">
-            <img class="slides" src="images/slide(1).jpg">
-            <img class="slides" src="images/slide(2).jpg">
-            <img class="slides" src="images/slide(3).jpg">
-            <img class="slides" src="images/slide(4).jpg">
-            <img class="slides" src="images/slide(5).jpg">
+    <div class="slide_container_parent_super">
+        <div class="slide_container_parent">
+            <div class="slide_container">
+                <img class="slides" src="images/slide(1).jpg">
+                <img class="slides" src="images/slide(2).jpg">
+                <img class="slides" src="images/slide(3).jpg">
+                <img class="slides" src="images/slide(4).jpg">
+                <img class="slides" src="images/slide(5).jpg">
+            </div>
+        </div>
+        <div class="slide_controls">
+            <div class="slide_back"></div>
+            <div class="slide_pause_resume"></div>
+            <div class="slide_forward"></div>
         </div>
     </div>
+    
     
 </body>
 </html>
