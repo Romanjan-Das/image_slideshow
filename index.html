@@ -8,8 +8,8 @@
     <style>
         .slide_controls {
             /* background-color: rgb(20, 199, 44); */
-            opacity: 0.3;
-            border: 1px solid darkgrey;
+            opacity: 1;
+            border: 1px solid gainsboro;
             padding: 5px;
             padding-left: 10px;
             height: 55px;
@@ -19,13 +19,15 @@
         .slide_icon {
             height: 40px;
             width: 40px;
-            border: 1px solid darkgrey;
+            padding: 0px;
+            border: 1px solid gainsboro;
             border-radius: 50%;
             float: left;
         }
 
         .slide_icon:hover {
-            box-shadow: 0px 0px 10px 1px darkgrey;
+            box-shadow: 0px 0px 10px 1px gainsboro;
+            border: 1.5px solid gainsboro;
         }
 
         .slide_left {
@@ -33,15 +35,10 @@
             left: 10px;
         }
 
-        .slide_pause {
-            position: absolute;
-            left: 60px;
-        }
-
         .slide_status {
             position: absolute;
-            left: 110px;
-            width: 260px;
+            left: 60px;
+            width: 360px;
             height: 40px;
             box-sizing: border-box;
         }
@@ -57,15 +54,13 @@
             margin-left: 8px;
             height: 10px;
             width: 10px;
-            border: 1px solid black;
+            border: 1px solid gainsboro;
             border-radius: 50%;
             float: none;
-
         }
 
-        .slide_blank {
-            position: absolute;
-            right: 60px;
+        .slide_status_pointers:hover {
+            border: 1.5px solid darkgrey;
         }
 
         .slide_right {
@@ -108,10 +103,16 @@
             height: inherit;
             float: left;
         }
+
+        .control_icon_img {
+            height: 30px;
+            width: 30px;
+            margin: 5px;
+        }
     </style>
     <script>
         var slides = document.getElementsByClassName("slides");
-        var slide_count = 1;
+        var slide_count = 0;
         var slide_pointer = [];
         var slide_timer;
         function slide_initialise() {
@@ -125,40 +126,72 @@
                 slide_pointer[i].className = "slide_status_pointers";
                 slide_pointer[i].id = "slide_pointer_" + i;
                 slide_pointer[i].setAttribute("onclick", "goto_slide_image(this);");
+                if (i == 0) {
+                    slide_pointer[i].style.backgroundColor = "gainsboro";
+                }
                 document.getElementsByClassName("slide_status_container")[0].appendChild(slide_pointer[i]);
             }
 
-            slide_timer = setInterval(() => {
-                var x = document.getElementById("slide_" + slide_count);
-                x.scrollIntoView();
-                for (i = 0; i < slides.length; i++) {
-                    document.getElementById("slide_pointer_" + i).style.backgroundColor = "white";
-                }
-                document.getElementById("slide_pointer_" + slide_count).style.backgroundColor = "black";
-                slide_count++;
-                if (slide_count > slides.length - 1) {
-                    slide_count = 0;
-                }
-            }, 3000);
+            starts_slide_interval();
         }
         function goto_slide_image(x) {
             for (i = 0; i < slides.length; i++) {
                 document.getElementById("slide_pointer_" + i).style.backgroundColor = "white";
             }
-            x.style.backgroundColor = "black";
+            x.style.backgroundColor = "gainsboro";
             var str = x.id;
             str = str.slice(14, str.length);
             var y = document.getElementById("slide_" + str);
-            clearInterval(slide_timer);
             y.scrollIntoView();
+            slide_count = parseInt(str);
+        }
+        function clears_slide_interval() {
+            clearInterval(slide_timer);
+        }
+        function starts_slide_interval() {
+            slide_timer = setInterval(() => {
+                slide_count++;
+                if (slide_count > slides.length - 1) {
+                    slide_count = 0;
+                }
+                slide_scroll_to_view();
+            }, 1000);
+        }
+        function slide_left_go() {
+            slide_count = slide_count - 1;
+            if (slide_count < 0) {
+                slide_count = slides.length - 1;
+            }
+            if (slide_count > slides.length - 1) {
+                slide_count = 0;
+            }
+            slide_scroll_to_view();
         }
 
+        function slide_right_go() {
+            slide_count = slide_count + 1;
+            if (slide_count > slides.length - 1) {
+                slide_count = 0;
+            }
+            slide_scroll_to_view();
+            
+        }
+        function slide_scroll_to_view(){
+            for (i = 0; i < slides.length; i++) {
+                document.getElementById("slide_pointer_" + i).style.backgroundColor = "white";
+            }
+            console.log(slide_count);
+            document.getElementById("slide_pointer_" + slide_count).style.backgroundColor = "gainsboro";
+            var x = document.getElementById("slide_" + slide_count);
+            x.scrollIntoView();
+        }
     </script>
 </head>
 
 <body onload="slide_initialise();">
     <div class="slide_container_parent_super">
-        <div class="slide_container_parent">
+        <div class="slide_container_parent" onmouseover="clears_slide_interval();"
+            onmouseout="starts_slide_interval();">
             <div class="slide_container">
                 <img class="slides" src="images/slide(1).jpg">
                 <img class="slides" src="images/slide(2).jpg">
@@ -167,16 +200,18 @@
                 <img class="slides" src="images/slide(5).jpg">
             </div>
         </div>
-        <div class="slide_controls">
-            <div class="slide_icon slide_left"></div>
-            <div class="slide_icon slide_pause"></div>
+        <div class="slide_controls" onmouseover="clears_slide_interval();" onmouseout="starts_slide_interval();">
+            <div class="slide_icon slide_left" onclick="slide_left_go();">
+                <img class="control_icon_img" src="slide_left_img.svg" alt="">
+            </div>
             <div class="slide_status">
                 <div class="slide_status_container">
                 </div>
 
             </div>
-            <div class="slide_icon slide_blank"></div>
-            <div class="slide_icon slide_right"></div>
+            <div class="slide_icon slide_right" onclick="slide_right_go();">
+                <img class="control_icon_img" src="slide_right_img.svg" alt="">
+            </div>
         </div>
     </div>
 </body>
