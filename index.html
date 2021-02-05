@@ -118,7 +118,6 @@
         function slide_initialise() {
             var z = document.getElementsByClassName("slide_container")[0];
             z.addEventListener("touchmove",clears_slide_interval,false);
-            z.addEventListener("touchend",starts_slide_interval,false);
             document.getElementsByClassName("slide_container")[0].style.width = (document.getElementsByClassName("slide_container_parent")[0].clientWidth * slides.length + 10) + "px";
             //document.getElementsByClassName("slide_controls")[0].style.height = document.getElementsByClassName("slide_container_parent")[0].clientHeight * 0.15 + "px";
             document.getElementsByClassName("slide_controls")[0].style.width = document.getElementsByClassName("slide_container_parent")[0].clientWidth + "px";
