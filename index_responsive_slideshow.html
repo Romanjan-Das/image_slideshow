@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slideshow</title>
+    <style>
+        .slide_container_parent_super {
+            position: absolute;
+            top: 0vw;
+            left: 0vw;
+            width: 100vw;
+            height: 62.5vw;
+            padding: 0px;
+        }
+
+        .slide_container_parent {
+            width: inherit;
+            height: inherit;
+            padding: 0px;
+            margin: 0px;
+            overflow-x: scroll;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        .slide_container_parent::-webkit-scrollbar {
+            display: none;
+        }
+
+        .slide_container {
+            height: inherit;
+            width: 5000px;
+        }
+
+        .slides {
+            height: inherit;
+            float: left;
+        }
+
+        .slide_controls {
+            /* background-color: rgb(20, 199, 44); */
+            opacity: 1;
+            border: 1px solid gainsboro;
+            padding: 1.041vw;
+            height: 11.46vw;
+            width: 100vw;
+            box-sizing: border-box;
+        }
+
+        .slide_icon {
+            height: 8.3vw;
+            width: 8.3vw;
+            padding: 0px;
+            border: 1px solid gainsboro;
+            border-radius: 50%;
+            float: left;
+        }
+
+        .slide_icon:hover {
+            box-shadow: 0px 0px 10px 1px gainsboro;
+            border: 1.5px solid gainsboro;
+        }
+
+        .slide_left {
+            position: absolute;
+            left: 2.1vw;
+        }
+
+        .slide_status {
+            position: absolute;
+            left: 0vw;
+            width: 100vw;
+            height: auto;
+            box-sizing: border-box;
+        }
+
+        .slide_status_container {
+            margin-left: 40vw;
+            margin-top: 3vw;
+            width: 30vw;
+        }
+
+        @media screen and (max-width: 400px) {
+            .slide_status_container {
+            margin-left: 40vw;
+            margin-top: 1vw;
+            width: 30vw;
+        }
+        }
+
+        @media screen and (max-width: 200px) {
+            .slide_status_container {
+            margin-left: 40vw;
+            margin-top: 0.1vw;
+            width: 30vw;
+        }
+        }
+
+        .slide_status_pointers {
+            display: inline-block;
+            margin-left: 1vw;
+            height: 2.083vw;
+            width: 2.083vw;
+            border: 1px solid gainsboro;
+            border-radius: 50%;
+            float: none;
+        }
+
+        .slide_status_pointers:hover {
+            border: 1.5px solid darkgrey;
+        }
+
+        .slide_right {
+            position: absolute;
+            right: 2.1vw;
+        }
+
+        
+        .control_icon_img {
+            height: 6.25vw;
+            width: 6.25vw;
+            margin: 1.04vw;
+        }
+    </style>
+    <script>
+        var slides = document.getElementsByClassName("slides");
+        var slide_count = 0;
+        var slide_pointer = [];
+        var slide_timer;
+        function slide_initialise() {
+            var z = document.getElementsByClassName("slide_container")[0];
+            z.addEventListener("touchmove",clears_slide_interval,false);
+            z.addEventListener("touchend",starts_slide_interval,false);
+            for (i = 0; i < slides.length; i++) {
+                slides[i].id = "slide_" + i;
+                slide_pointer[i] = document.createElement("div");
+                slide_pointer[i].className = "slide_status_pointers";
+                slide_pointer[i].id = "slide_pointer_" + i;
+                slide_pointer[i].setAttribute("onclick", "goto_slide_image(this);");
+                if (i == 0) {
+                    slide_pointer[i].style.backgroundColor = "gainsboro";
+                }
+                document.getElementsByClassName("slide_status_container")[0].appendChild(slide_pointer[i]);
+            }
+            starts_slide_interval();
+        }
+        function goto_slide_image(x) {
+            for (i = 0; i < slides.length; i++) {
+                document.getElementById("slide_pointer_" + i).style.backgroundColor = "white";
+            }
+            x.style.backgroundColor = "gainsboro";
+            var str = x.id;
+            str = str.slice(14, str.length);
+            var y = document.getElementById("slide_" + str);
+            y.scrollIntoView();
+            slide_count = parseInt(str);
+        }
+        function clears_slide_interval() {
+            clearInterval(slide_timer);
+        }
+        function starts_slide_interval() {
+            slide_timer = setInterval(() => {
+                slide_count++;
+                if (slide_count > slides.length - 1) {
+                    slide_count = 0;
+                }
+                slide_scroll_to_view();
+            }, 1000);
+        }
+        function slide_left_go() {
+            slide_count = slide_count - 1;
+            if (slide_count < 0) {
+                slide_count = slides.length - 1;
+            }
+            if (slide_count > slides.length - 1) {
+                slide_count = 0;
+            }
+            slide_scroll_to_view();
+        }
+
+        function slide_right_go() {
+            slide_count = slide_count + 1;
+            if (slide_count > slides.length - 1) {
+                slide_count = 0;
+            }
+            slide_scroll_to_view();
+            
+        }
+        function slide_scroll_to_view(){
+            for (i = 0; i < slides.length; i++) {
+                document.getElementById("slide_pointer_" + i).style.backgroundColor = "white";
+            }
+            document.getElementById("slide_pointer_" + slide_count).style.backgroundColor = "gainsboro";
+            var x = document.getElementById("slide_" + slide_count);
+            x.scrollIntoView();
+        }
+    </script>
+</head>
+
+<body onload="slide_initialise();">
+    <div class="slide_container_parent_super">
+        <div class="slide_container_parent" onmouseover="clears_slide_interval(); " onmouseout="starts_slide_interval();">
+            <div class="slide_container">
+                <img class="slides" src="images/slide(1).jpg">
+                <img class="slides" src="images/slide(2).jpg">
+                <img class="slides" src="images/slide(3).jpg">
+                <img class="slides" src="images/slide(4).jpg">
+                <img class="slides" src="images/slide(5).jpg">
+            </div>
+        </div>
+        <div class="slide_controls" onmouseover="clears_slide_interval();" onmouseout="starts_slide_interval();">
+            <div class="slide_icon slide_left" onclick="slide_left_go();">
+                <img class="control_icon_img" src="slide_left_img.svg" alt="">
+            </div>
+            <div class="slide_status">
+                <div class="slide_status_container">
+                </div>
+
+            </div>
+            <div class="slide_icon slide_right" onclick="slide_right_go();">
+                <img class="control_icon_img" src="slide_right_img.svg" alt="">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
